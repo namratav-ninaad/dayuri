@@ -1,0 +1,51 @@
+import 'package:dayuri/core/theme/theme_color_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:dayuri/core/constants/app_sizes.dart';
+import 'package:dayuri/core/widgets/common_divider.dart';
+import 'package:dayuri/core/widgets/common_icon_widget.dart';
+import 'package:dayuri/core/widgets/common_text_widget.dart';
+
+class ProfileTile extends StatelessWidget {
+  const ProfileTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.showDivider = true,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final bool showDivider;
+  final Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          horizontalTitleGap: AppSizes.s12,
+          minLeadingWidth: AppSizes.s0,
+          leading: CommonIconWidget(
+            icon: icon,
+            size: AppSizes.icon24,
+            color: context.black,
+          ),
+          title: CommonTextWidget(
+            title: title,
+            color: context.black,
+            fontWeight: FontWeight.w500,
+            fontSize: AppSizes.f14,
+          ),
+          trailing: const CommonIconWidget(icon: Icons.chevron_right),
+          onTap: onTap,
+        ),
+        if (showDivider) const CommonDivider(),
+      ],
+    );
+  }
+}

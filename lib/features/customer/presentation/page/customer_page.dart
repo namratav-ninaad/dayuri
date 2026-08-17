@@ -1,0 +1,122 @@
+import 'package:dayuri/core/enum/app_enum.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dayuri/core/constants/app_sizes.dart';
+import 'package:dayuri/core/constants/app_strings.dart';
+import 'package:dayuri/core/routes/app_routes.dart';
+import 'package:dayuri/core/routes/routes_name.dart';
+import 'package:dayuri/core/theme/theme_color_extension.dart';
+import 'package:dayuri/core/widgets/common_appbar_widget.dart';
+import 'package:dayuri/core/widgets/common_circular_progress_indicator.dart';
+import 'package:dayuri/core/widgets/common_empty_text.dart';
+import 'package:dayuri/core/widgets/common_icon_widget.dart';
+import 'package:dayuri/core/widgets/common_text_field.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_bloc.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_event.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_state.dart';
+import 'package:dayuri/features/customer/presentation/widget/customer_card.dart';
+
+class CustomerPage extends StatefulWidget {
+  const CustomerPage({super.key, this.backButtonShow = false});
+
+  final bool backButtonShow;
+
+  @override
+  State<CustomerPage> createState() => _CustomerPageState();
+}
+
+class _CustomerPageState extends State<CustomerPage> {
+  final searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CustomerBloc>().add(FetchCustomerEvent(''));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: context.white,
+      appBar: CommonAppbarWidget(
+        leading: widget.backButtonShow ? null : AppSizes.h0,
+        title: widget.backButtonShow ? AppStringsConstants.customers : '',
+
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(
+            widget.backButtonShow ? AppSizes.s80 : AppSizes.s100,
+          ),
+          child: Container(
+            height: AppSizes.s45,
+            margin: EdgeInsets.symmetric(vertical: AppSizes.p24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.p24),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CommonTextFormField(
+                    onFieldSubmitted: (value) {
+                      context.read<CustomerBloc>().add(
+                        FetchCustomerEvent(value),
+                      );
+                    },
+                    prefixIcon: Icons.search_outlined,
+                    controller: searchController,
+                    labelText: AppStringsConstants.searchCustomer,
+                  ),
+                ),
+                AppSizes.w12,
+                GestureDetector(
+                  onTap: () => AppRoutes.pushNamed(RouteNames.createCustomer),
+                  child: Container(
+                    padding: EdgeInsets.all(AppSizes.p8),
+                    decoration: BoxDecoration(
+                      // border: Border.all(color: context.greyC8),
+                      color: context.greyFA,
+                      borderRadius: BorderRadius.circular(AppSizes.r12),
+                    ),
+                    child: CommonIconWidget(
+                      icon: Icons.add_circle_outline,
+                      size: AppSizes.icon24,
+                      color: context.primaryBlueColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: BlocBuilder<CustomerBloc, CustomerState>(
+        builder: (context, state) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<CustomerBloc>().add(FetchCustomerEvent(''));
+            },
+            child: state.state.isLoading
+                ? const Center(child: CommonCircularProgressIndicator())
+                : state.customers.isEmpty
+                ? CommonEmptyText(title: AppStringsConstants.noCustomerData)
+                : ListView.separated(
+                    separatorBuilder: (context, index) => AppSizes.h12,
+                    shrinkWrap: true,
+                    itemCount: state.customers.length,
+                    itemBuilder: (context, index) => CustomerCard(
+                      customer: state.customers[index],
+                    /*  onTap: () => AppRoutes.pushNamed(
+                        RouteNames.customerDetail,
+                        arguments: state.customers[index],
+                      ),*/
+                    ),
+                    padding: EdgeInsets.fromLTRB(
+                      AppSizes.p24,
+                      0,
+                      AppSizes.p24,
+                      AppSizes.p12,
+                    ),
+                  ),
+          );
+        },
+      ),
+    );
+  }
+}

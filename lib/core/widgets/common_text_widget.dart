@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:dayuri/core/constants/app_sizes.dart';
+
+class CommonTextWidget extends StatelessWidget {
+  final String title;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Color? color;
+  final TextOverflow? overFlow;
+  final TextAlign? textAlign;
+  final int? maxLines;
+
+  const CommonTextWidget({
+    super.key,
+    this.title = '',
+    this.fontSize,
+    this.fontWeight,
+    this.color,
+    this.overFlow,
+    this.textAlign,
+    this.maxLines,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      style: TextStyle(
+        overflow: overFlow,
+        fontSize: fontSize ?? AppSizes.f28,
+        fontWeight: fontWeight ?? FontWeight.w700,
+        color: color,
+      ),
+    );
+  }
+}
