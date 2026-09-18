@@ -19,6 +19,7 @@ class CreateCustomerState extends Equatable {
   final bool isSaving;
   final Note? note;
   final ApiStatus state;
+  final bool isCreateCustomer;
   final List<CustomerModel> customers;
   final String? errorMessage;
   final String searchQuery;
@@ -44,6 +45,7 @@ class CreateCustomerState extends Equatable {
     this.recordedDuration = '',
     this.selectedNoteDate,
     this.isSaving = false,
+    this.isCreateCustomer = false,
     this.selectedContactTags = const [],
     this.companies = const [],
     this.selectedCompany,
@@ -92,6 +94,7 @@ class CreateCustomerState extends Equatable {
     AddressType? selectedAddressType,
     bool clearSelectedCountry = false,
     bool clearSelectedState = false,
+    bool? isCreateCustomer,
   }) {
     return CreateCustomerState(
       contactTags: contactTags ?? this.contactTags,
@@ -102,6 +105,7 @@ class CreateCustomerState extends Equatable {
       selectedCompany: selectedCompany ?? this.selectedCompany,
       errorMessage: errorMessage,
       state: state ?? this.state,
+      isCreateCustomer: isCreateCustomer ?? this.isCreateCustomer,
       customers: customers ?? this.customers,
       selectedNoteType: selectedType ?? selectedNoteType,
       noteText: noteText ?? this.noteText,
@@ -133,6 +137,7 @@ class CreateCustomerState extends Equatable {
   List<Object?> get props => [
     states,
     countries,
+    isCreateCustomer,
     selectedCountry,
     selectedState,
     attachments,

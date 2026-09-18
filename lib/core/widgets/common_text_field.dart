@@ -1,13 +1,15 @@
-import 'package:dayuri/core/theme/theme_color_extension.dart';
+import 'package:dayuri/core/widgets/common_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dayuri/core/constants/app_sizes.dart';
+import 'package:dayuri/core/theme/theme_color_extension.dart';
 import 'package:dayuri/core/widgets/common_icon_widget.dart';
 
 class CommonTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final IconData? prefixIcon;
+  final String? prefixText;
   final TextInputType keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
@@ -26,6 +28,11 @@ class CommonTextFormField extends StatelessWidget {
   final Color? borderColor;
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
+
+  // ADD THIS
+  final FocusNode? focusNode;
+  final TextAlign textAlign;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CommonTextFormField({
     super.key,
@@ -50,12 +57,17 @@ class CommonTextFormField extends StatelessWidget {
     this.borderColor,
     this.maxLength,
     this.onFieldSubmitted,
+    this.focusNode,
+    this.textAlign = TextAlign.start,
+    this.contentPadding,
+    this.prefixText,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
       keyboardType: keyboardType,
       obscureText: obscureText,
       validator: validator,
@@ -66,6 +78,7 @@ class CommonTextFormField extends StatelessWidget {
       readOnly: readOnly,
       enabled: enabled,
       maxLength: maxLength,
+      textAlign: textAlign,
       cursorColor: context.primaryBlueColor,
       style: TextStyle(
         fontSize: AppSizes.f14,
@@ -77,16 +90,17 @@ class CommonTextFormField extends StatelessWidget {
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
         counterText: '',
-        isDense: true,
-        fillColor: fillColor,
+        fillColor: fillColor /*?? context.greyFA*/,
         filled: filled,
+        isDense: true,
         errorText: errorText,
         labelText: labelText,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.p16,
-          vertical: AppSizes.p12,
-        ),
-
+        contentPadding:
+            contentPadding ??
+            const EdgeInsets.symmetric(
+              horizontal: AppSizes.p16,
+              vertical: AppSizes.p12,
+            ),
         labelStyle: TextStyle(
           color: textColor ?? context.black,
           fontSize: AppSizes.f14,
@@ -97,32 +111,42 @@ class CommonTextFormField extends StatelessWidget {
             ? CommonIconWidget(
                 icon: prefixIcon!,
                 color: textColor ?? context.black,
-                size: AppSizes.icon20,
+              )
+            : prefixText != null
+            ? Padding(
+                padding:
+                    contentPadding ??
+                    const EdgeInsets.symmetric(
+                      horizontal: AppSizes.p16,
+                      vertical: AppSizes.p12,
+                    ),
+                child: CommonTextWidget(
+                  title: prefixText!,
+                  fontSize: AppSizes.f14,
+                  fontWeight: FontWeight.w600,
+                ),
               )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r12),
-          borderSide: BorderSide(
-            color: borderColor ?? context.greyC8,
-          ),
+          /*borderSide: BorderSide.none,*/
+
+          borderSide: BorderSide(color: borderColor ?? context.greyC8),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r12),
-          borderSide: BorderSide(
-            color: borderColor ?? context.greyC8,
-          ),
+          /*  borderSide: BorderSide.none,*/
+          borderSide: BorderSide(color: borderColor ?? context.greyC8),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r12),
-          borderSide: BorderSide(
-            color: borderColor ?? context.greyC8,
-          ),
+          /* borderSide: BorderSide.none,*/
+          borderSide: BorderSide(color: borderColor ?? context.greyC8),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.r12),
-          borderSide: BorderSide(
-            color: borderColor ?? context.greyC8,
-          ),
+          /* borderSide: BorderSide.none,*/
+          borderSide: BorderSide(color: borderColor ?? context.greyC8),
         ),
       ),
     );

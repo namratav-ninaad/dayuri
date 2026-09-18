@@ -1,192 +1,45 @@
-import 'package:dayuri/core/constants/app_strings.dart';
+import 'package:dayuri/core/constants/app_images.dart';
 import 'package:dayuri/core/enum/app_enum.dart';
-import 'package:dayuri/core/toast/toast_helper.dart';
-import 'package:dayuri/features/dashboard/data/model/category.dart';
-import 'package:dayuri/features/dashboard/domain/entities/product_filter_data.dart';
-import 'package:dayuri/features/dashboard/domain/usecases/add_cart_uc.dart';
-import 'package:dayuri/features/dashboard/domain/usecases/category_uc.dart';
-import 'package:dayuri/features/dashboard/domain/usecases/product_uc.dart';
+import 'package:dayuri/features/dashboard/data/model/location.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final ProductUseCase productUseCase;
-  final AddCartUseCase addCartUseCase;
-  final CategoryUseCase categoryUseCase;
-
-  DashboardBloc({
-    required this.productUseCase,
-    required this.addCartUseCase,
-    required this.categoryUseCase,
-  }) : super(const DashboardState()) {
-    on<ToggleWishlistEvent>(_onToggleWishlist);
-    on<SelectCategoryEvent>(_onSelectCategory);
+  DashboardBloc() : super(const DashboardState()) {
     on<ResetDashboardEvent>(_onResetDashboard);
-    on<FetchProductsEvent>(_onFetchProducts);
-    on<FetchCategoriesEvent>(_onFetchCategoriesEvent);
-    on<AddCartEvent>(_onAddCart);
+    on<LoadLocationsEvent>(_onLoadLocations);
+    on<SearchLocationEvent>(_onSearchLocation);
+    on<SelectLocationEvent>(_onSelectLocation);
+    on<UseCurrentLocationEvent>(_onUseCurrentLocation);
+    on<FetchBannersEvent>(_onFetchBanners);
+    on<ChangeBannerIndexEvent>(_onChangeBannerIndex);
   }
 
-  Future<void> _onFetchCategoriesEvent(
-    FetchCategoriesEvent event,
-    Emitter<DashboardState> emit,
-  ) async {
+  void _onFetchBanners(FetchBannersEvent event, Emitter<DashboardState> emit) {
     emit(
       state.copyWith(
-        state: ApiStatus.loading,
-        isAddCartSuccess: false,
-        errorMessage: null,
-      ),
-    );
-
-    final result = await categoryUseCase.call();
-
-    result.fold(
-      (failure) {
-        emit(
-          state.copyWith(
-            state: ApiStatus.failure,
-            isAddCartSuccess: false,
-            errorMessage: failure.message,
-          ),
-        );
-      },
-      (categories) {
-        final allCategory = CategoryModel(id: 0, name: AppStringsConstants.all);
-
-        emit(
-          state.copyWith(
-            state: ApiStatus.success,
-            isAddCartSuccess: false,
-            categories: [allCategory, ...categories],
-            selectedCategory: allCategory,
-          ),
-        );
-
-        add(FetchProductsEvent(query: '', categoryId: null));
-      },
-    );
-  }
-
-  Future<void> _onAddCart(
-    AddCartEvent event,
-    Emitter<DashboardState> emit,
-  ) async {
-    try {
-      emit(
-        state.copyWith(
-          loadingProductId: event.data.productId,
-          errorMessage: null,
-          isAddCartSuccess: false,
-        ),
-      );
-
-      final result = await addCartUseCase.call(data: event.data);
-
-      result.fold(
-        (failure) {
-          if (failure.message.isNotEmpty) {
-            ToastHelper.error(failure.message);
-          }
-          emit(
-            state.copyWith(
-              loadingProductId: null,
-              isAddCartSuccess: false,
-              errorMessage: failure.message,
-            ),
-          );
-        },
-        (cartData) {
-          final updatedProducts = state.products.map((product) {
-            if (product.id == event.data.productId) {
-              product.alreadyInCart = true;
-            }
-            return product;
-          }).toList();
-
-          emit(
-            state.copyWith(
-              errorMessage: null,
-              loadingProductId: null,
-              isAddCartSuccess: true,
-              products: updatedProducts,
-            ),
-          );
-          ToastHelper.success(AppStringsConstants.productCartMsg);
-        },
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          loadingProductId: null,
-          isAddCartSuccess: false,
-          errorMessage: e.toString(),
-        ),
-      );
-    }
-  }
-
-  Future<void> _onFetchProducts(
-    FetchProductsEvent event,
-    Emitter<DashboardState> emit,
-  ) async {
-    emit(
-      state.copyWith(
-        state: ApiStatus.loading,
-        isAddCartSuccess: false,
-        errorMessage: null,
-      ),
-    );
-
-    final result = await productUseCase.call(
-      data: ProductFilterData(
-        name: event.query.toLowerCase().trim(),
-        categoryId: event.categoryId,
-      ),
-    );
-
-    result.fold(
-      (failure) => emit(
-        state.copyWith(
-          state: ApiStatus.failure,
-          isAddCartSuccess: false,
-          errorMessage: failure.message,
-        ),
-      ),
-      (products) => emit(
-        state.copyWith(
-          state: ApiStatus.success,
-          isAddCartSuccess: false,
-          products: products,
-        ),
+        bannerList: [
+          AppImagesConstants.banner1,
+          AppImagesConstants.banner2,
+          AppImagesConstants.banner3,
+        ],
+        currentIndex: 0,
       ),
     );
   }
 
-  void _onToggleWishlist(
-    ToggleWishlistEvent event,
+  void _onChangeBannerIndex(
+    ChangeBannerIndexEvent event,
     Emitter<DashboardState> emit,
   ) {
-    final Set<String> updatedFavorites = Set<String>.from(
-      state.favoriteProductIds,
-    );
-
-    if (updatedFavorites.contains(event.productId)) {
-      updatedFavorites.remove(event.productId);
-    } else {
-      updatedFavorites.add(event.productId);
+    if (event.index < 0 || event.index >= state.bannerList.length) {
+      return;
     }
 
-    emit(state.copyWith(favoriteProductIds: updatedFavorites));
-  }
-
-  void _onSelectCategory(
-    SelectCategoryEvent event,
-    Emitter<DashboardState> emit,
-  ) {
-    emit(state.copyWith(selectedCategory: event.category));
-    add(FetchProductsEvent(query: '', categoryId: event.category.id));
+    emit(state.copyWith(currentIndex: event.index));
   }
 
   void _onResetDashboard(
@@ -194,5 +47,222 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) {
     emit(DashboardState());
+  }
+
+  Future<void> _onLoadLocations(
+    LoadLocationsEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(state.copyWith(status: ApiStatus.loading,isCurrentLoading: ApiStatus.initial));
+
+    try {
+      // Replace this with API/repository call later.
+      const locations = [
+        LocationModel(city: 'Orchard Road', address: 'Singapore, 238841'),
+        LocationModel(city: 'Marina Bay', address: 'Singapore, 018956'),
+        LocationModel(city: 'Jurong East', address: 'Singapore, 609601'),
+        LocationModel(city: 'Tampines', address: 'Singapore, 529510'),
+        LocationModel(city: 'Woodlands', address: 'Singapore, 738099'),
+        LocationModel(city: 'Bedok', address: 'Singapore, 460001'),
+      ];
+
+      emit(
+        state.copyWith(
+          status: ApiStatus.success,
+          locations: locations,
+          filteredLocations: locations,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(status: ApiStatus.failure, errorMessage: e.toString()),
+      );
+    }
+  }
+
+  void _onSearchLocation(
+    SearchLocationEvent event,
+    Emitter<DashboardState> emit,
+  ) {
+    final query = event.query.trim().toLowerCase();
+
+    if (query.isEmpty) {
+      emit(
+        state.copyWith(
+          searchQuery: event.query,
+          filteredLocations: state.locations,
+        ),
+      );
+      return;
+    }
+
+    final filteredLocations = state.locations.where((location) {
+      return location.city.toLowerCase().contains(query) ||
+          location.address.toLowerCase().contains(query);
+    }).toList();
+
+    emit(
+      state.copyWith(
+        searchQuery: event.query,
+        filteredLocations: filteredLocations,
+      ),
+    );
+  }
+
+  void _onSelectLocation(
+    SelectLocationEvent event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        selectedLocation: event.location,
+        isCurrentLocationSelected: false,
+      ),
+    );
+  }
+
+  Future<void> _onUseCurrentLocation(
+    UseCurrentLocationEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(state.copyWith(isCurrentLoading: ApiStatus.loading));
+
+    try {
+      // 1. Check if location service is enabled
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+      if (!serviceEnabled) {
+        emit(
+          state.copyWith(
+            isCurrentLoading: ApiStatus.failure,
+            // status: ApiStatus.failure,
+            errorMessage:
+                'Location services are disabled. Please enable location services.',
+          ),
+        );
+
+        // Open device Location Settings
+        await Geolocator.openLocationSettings();
+
+        return;
+      }
+
+      // 2. Check permission
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      // 3. Request permission
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+
+        if (permission == LocationPermission.denied) {
+          emit(
+            state.copyWith(
+              isCurrentLoading: ApiStatus.failure,
+              // status: ApiStatus.failure,
+              errorMessage: 'Location permission denied.',
+            ),
+          );
+          return;
+        }
+      }
+
+      // 4. Permanently denied
+      if (permission == LocationPermission.deniedForever) {
+        emit(
+          state.copyWith(
+            isCurrentLoading: ApiStatus.failure,
+            // status: ApiStatus.failure,
+            errorMessage:
+                'Location permission permanently denied. Please enable it from Settings.',
+          ),
+        );
+
+        // Open app settings
+        await Geolocator.openAppSettings();
+
+        return;
+      }
+
+      // 5. Get current GPS position
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      // 6. Convert coordinates to address
+      final Geocoding geocoding = Geocoding();
+
+      final placemarks = await geocoding.placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isEmpty) {
+        emit(
+          state.copyWith(
+            isCurrentLoading: ApiStatus.failure,
+            // status: ApiStatus.failure,
+            errorMessage: 'Unable to find your current location.',
+          ),
+        );
+        return;
+      }
+
+      final place = placemarks.first;
+
+      final city = place.locality?.trim().isNotEmpty == true
+          ? place.locality!.trim()
+          : place.subAdministrativeArea?.trim().isNotEmpty == true
+          ? place.subAdministrativeArea!.trim()
+          : place.administrativeArea?.trim().isNotEmpty == true
+          ? place.administrativeArea!.trim()
+          : 'Unknown Location';
+
+      final area = place.subLocality?.trim().isNotEmpty == true
+          ? place.subLocality!.trim()
+          : place.street?.trim().isNotEmpty == true
+          ? place.street!.trim()
+          : '';
+
+      final postalCode = place.postalCode?.trim() ?? '';
+
+      String address = area;
+
+      if (postalCode.isNotEmpty) {
+        if (address.isNotEmpty) {
+          address += ', ';
+        }
+        address += postalCode;
+      }
+
+      if (address.isEmpty) {
+        address = city;
+      }
+
+      final currentLocation = LocationModel(
+        city: city,
+        address: address,
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+
+      emit(
+        state.copyWith(
+          // status: ApiStatus.success,
+          selectedLocation: currentLocation,
+          isCurrentLocationSelected: true,
+          isCurrentLoading: ApiStatus.success,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isCurrentLoading: ApiStatus.failure,
+          // status: ApiStatus.failure,
+          errorMessage: 'Unable to get current location.',
+        ),
+      );
+    }
   }
 }

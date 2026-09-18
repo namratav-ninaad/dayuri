@@ -70,8 +70,8 @@ class _CustomerPageState extends State<CustomerPage> {
                   child: Container(
                     padding: EdgeInsets.all(AppSizes.p8),
                     decoration: BoxDecoration(
-                      // border: Border.all(color: context.greyC8),
-                      color: context.greyFA,
+                      border: Border.all(color: context.greyC8),
+                      // color: context.greyFA,
                       borderRadius: BorderRadius.circular(AppSizes.r12),
                     ),
                     child: CommonIconWidget(
@@ -102,10 +102,10 @@ class _CustomerPageState extends State<CustomerPage> {
                     itemCount: state.customers.length,
                     itemBuilder: (context, index) => CustomerCard(
                       customer: state.customers[index],
-                    /*  onTap: () => AppRoutes.pushNamed(
+                      onTap: () => AppRoutes.pushNamed(
                         RouteNames.customerDetail,
                         arguments: state.customers[index],
-                      ),*/
+                      ),
                     ),
                     padding: EdgeInsets.fromLTRB(
                       AppSizes.p24,

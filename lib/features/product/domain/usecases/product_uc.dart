@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dayuri/core/error/failures.dart';
-import 'package:dayuri/features/dashboard/data/model/product.dart';
-import 'package:dayuri/features/dashboard/data/repository/dashboard_repository.dart';
-import 'package:dayuri/features/dashboard/domain/entities/product_filter_data.dart';
+import 'package:dayuri/features/product/data/model/product.dart';
+import 'package:dayuri/features/product/data/repository/product_repository.dart';
+import 'package:dayuri/features/product/domain/entities/product_filter_data.dart';
 
 class ProductUseCase {
-  final DashboardRepository repository;
+  final ProductRepository repository;
 
   ProductUseCase(this.repository);
 

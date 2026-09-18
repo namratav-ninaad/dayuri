@@ -40,9 +40,11 @@ class CustomerCard extends StatelessWidget {
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: borderRadius,
-          color: color ?? context.greyFA,
-
-          boxShadow:
+          // color: color ?? context.greyFA,
+          border: boxShadow?.isEmpty == true
+              ? null
+              : Border.all(color: context.greyC8),
+          /* boxShadow:
               boxShadow ??
               [
                 BoxShadow(
@@ -50,7 +52,7 @@ class CustomerCard extends StatelessWidget {
                   offset: const Offset(0, 2),
                   blurRadius: 2,
                 ),
-              ],
+              ],*/
         ),
         child: InkWell(
           borderRadius: borderRadius,

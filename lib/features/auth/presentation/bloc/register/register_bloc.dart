@@ -133,7 +133,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             ),
           );
         },
-        (loginData) async {
+        (r) async {
           emit(
             state.copyWith(
               status: ApiStatus.success,

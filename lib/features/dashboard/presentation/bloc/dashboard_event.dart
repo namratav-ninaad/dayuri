@@ -1,5 +1,4 @@
-import 'package:dayuri/features/dashboard/data/model/category.dart';
-import 'package:dayuri/features/dashboard/domain/entities/add_cart_data.dart';
+import 'package:dayuri/features/dashboard/data/model/location.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class DashboardEvent extends Equatable {
@@ -9,51 +8,50 @@ abstract class DashboardEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Wishlist
-class ToggleWishlistEvent extends DashboardEvent {
-  final String productId;
-
-  const ToggleWishlistEvent(this.productId);
-
-  @override
-  List<Object?> get props => [productId];
+/// Reset dashboard
+class ResetDashboardEvent extends DashboardEvent {
+  const ResetDashboardEvent();
 }
 
+/// Load all locations
+class LoadLocationsEvent extends DashboardEvent {
+  const LoadLocationsEvent();
+}
 
-// Fetch Products
-class FetchProductsEvent extends DashboardEvent {
+/// Search city / area / pinCode
+class SearchLocationEvent extends DashboardEvent {
   final String query;
-  final int? categoryId;
 
-  const FetchProductsEvent({required this.query, this.categoryId});
+  const SearchLocationEvent(this.query);
 
   @override
   List<Object?> get props => [query];
 }
 
-//Fetch Categories
-class FetchCategoriesEvent extends DashboardEvent {}
+/// Select a location
+class SelectLocationEvent extends DashboardEvent {
+  final LocationModel location;
 
-
-//Add Cart
-class AddCartEvent extends DashboardEvent {
-  final AddCartData data;
-
-  const AddCartEvent(this.data);
-}
-
-
-// Category selected
-class SelectCategoryEvent extends DashboardEvent {
-  final CategoryModel category;
-
-  const SelectCategoryEvent(this.category);
+  const SelectLocationEvent(this.location);
 
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [location];
 }
 
-// Reset dashboard
-class ResetDashboardEvent extends DashboardEvent {
-  const ResetDashboardEvent();
+/// Use current location
+class UseCurrentLocationEvent extends DashboardEvent {
+  const UseCurrentLocationEvent();
+}
+
+/// Fetch Banners
+class FetchBannersEvent extends DashboardEvent {}
+
+/// Change Banner Index
+class ChangeBannerIndexEvent extends DashboardEvent {
+  final int index;
+
+  const ChangeBannerIndexEvent(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }

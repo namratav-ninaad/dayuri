@@ -1,9 +1,11 @@
 import 'package:dayuri/core/constants/app_colors.dart';
+import 'package:dayuri/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 
 extension ThemeColors on BuildContext {
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 
+  // Color
   Color get white =>
       isDark ? AppColorsConstants.black : AppColorsConstants.white;
 
@@ -12,7 +14,6 @@ extension ThemeColors on BuildContext {
 
   Color get greyC8 =>
       isDark ? AppColorsConstants.grey61 : AppColorsConstants.greyC8;
-
 
   Color get greyFA =>
       isDark ? AppColorsConstants.greyF5 : AppColorsConstants.greyFA;
@@ -27,4 +28,9 @@ extension ThemeColors on BuildContext {
       isDark ? AppColorsConstants.grey2C : AppColorsConstants.greyF2;
 
   Color get primaryBlueColor => AppColorsConstants.primaryBlueColor;
+
+  // Image
+  String get primaryColorLogoIcon => isDark
+      ? AppImagesConstants.primaryColorWhiteLogoIcon
+      : AppImagesConstants.primaryColorBlackLogoIcon;
 }

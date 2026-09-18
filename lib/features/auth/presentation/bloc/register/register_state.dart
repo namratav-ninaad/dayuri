@@ -59,7 +59,6 @@ class RegisterState extends Equatable {
       selectedCountry: clearSelectedCountry
           ? null
           : (selectedCountry ?? this.selectedCountry),
-
       selectedState: clearSelectedState
           ? null
           : (selectedState ?? this.selectedState),

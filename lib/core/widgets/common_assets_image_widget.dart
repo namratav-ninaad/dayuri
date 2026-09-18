@@ -8,12 +8,14 @@ class CommonAssetsImageWidget extends StatelessWidget {
     this.imageWidth = AppSizes.image180,
     required this.imagePath,
     this.color,
+    this.fit,
   });
 
   final double imageHeight;
   final double imageWidth;
   final String imagePath;
   final Color? color;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CommonAssetsImageWidget extends StatelessWidget {
       imagePath,
       height: imageHeight,
       width: imageWidth,
-      fit: BoxFit.contain,
+      fit: fit ?? BoxFit.contain,
       color: color,
     );
   }

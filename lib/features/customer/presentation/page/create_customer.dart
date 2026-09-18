@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dayuri/core/enum/app_enum.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_bloc.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -134,7 +136,10 @@ class _CreateCustomerPageState extends State<CreateCustomerPage>
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.r24)),
       ),
-      builder: (context) => SafeArea(top: false,child: AddNoteBottomSheet(onNoteAdded: _addNewNote)),
+      builder: (context) => SafeArea(
+        top: false,
+        child: AddNoteBottomSheet(onNoteAdded: _addNewNote),
+      ),
     );
   }
 
@@ -175,8 +180,9 @@ class _CreateCustomerPageState extends State<CreateCustomerPage>
             prev.state.isSuccess != curr.state.isSuccess ||
             prev.errorMessage != curr.errorMessage,
         listener: (context, state) {
-          if (state.state.isSuccess) {
+          if (state.state.isSuccess && state.isCreateCustomer) {
             ToastHelper.success(AppStringsConstants.createCustomerMsg);
+            context.read<CustomerBloc>().add(FetchCustomerEvent(''));
             AppRoutes.pop();
           }
           if (state.errorMessage?.isNotEmpty == true) {
@@ -300,8 +306,8 @@ class _CreateCustomerPageState extends State<CreateCustomerPage>
                       padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppSizes.r12),
-                        // border: Border.all(color: context.greyC8),
-                        color: context.greyFA,
+                        border: Border.all(color: context.greyC8),
+                        // color: context.greyFA,
                       ),
                       child: Column(
                         children: [
@@ -441,8 +447,8 @@ class _CreateCustomerPageState extends State<CreateCustomerPage>
                       padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppSizes.r12),
-                        // border: Border.all(color: context.greyC8),
-                        color: context.greyFA,
+                        border: Border.all(color: context.greyC8),
+                        // color: context.greyFA,
                       ),
                       child: Column(
                         children: [
@@ -486,8 +492,8 @@ class _CreateCustomerPageState extends State<CreateCustomerPage>
                       padding: EdgeInsets.all(AppSizes.p12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppSizes.r12),
-                        // border: Border.all(color: context.greyC8),
-                        color: context.greyFA,
+                        border: Border.all(color: context.greyC8),
+                        // color: context.greyFA,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

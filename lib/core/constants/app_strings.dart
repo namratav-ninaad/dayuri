@@ -1,9 +1,9 @@
 class AppStringsConstants {
   //APP name
-  static const String appName = 'Dayuri';
+  static const String appName = 'Ninaad Customer Portal';
 
   // Api Base URL
-  static const String baseUrl = 'http://194.233.64.122:8080/api/';
+  static const String baseUrl = 'http://194.233.64.122:7070/api/';
   static const String loginURl = 'auth/login';
   static const String forgotPasswordURl = 'auth/forgot-password';
   static const String registerURl = 'auth/register';
@@ -26,6 +26,10 @@ class AppStringsConstants {
   static const String contactTagURl = 'contacttags';
   static const String paymentTermsURl = 'paymentterms';
   static const String createCustomerURl = 'contact/create';
+  static const String ordersURl = 'orders';
+  static const String invoicesURl = 'invoices';
+  static const String deliveriesURl = 'contact/deliveries';
+  static const String submitRfqURl = 'submit-rfq';
 
   //Date Format
   static const String ddMMMyyyy = 'dd MMM yyyy'; // 28 Jul 2026
@@ -47,9 +51,8 @@ class AppStringsConstants {
   static const String fontFamily = 'Poppins';
 
   //Share
-  static const String accessToken = 'access_token';
-  static const String sessionId = 'session_id';
-  static const String companyId = 'company_id';
+  static const String sessionId = "session_id";
+  static const String loginResponse = "login_response";
   static const String rememberMeKey = "rememberMe";
   static const String rememberEmail = "rememberEmail";
   static const String rememberPassword = "rememberPassword";
@@ -87,7 +90,8 @@ class AppStringsConstants {
   static const String email = 'Email';
   static const String mobileNumber = 'Mobile Number';
   static const String street = 'Street';
-  static const String zip = 'Zip';
+  static const String street2 = 'Street2';
+  static const String zip = 'Pin';
   static const String city = 'City';
   static const String country = 'Country';
   static const String state = 'State';
@@ -102,6 +106,7 @@ class AppStringsConstants {
   static const String otpVerifiedMsg = 'OTP Verified Successfully!';
   static const String passwordResetMsg = 'Password Reset Successfully!';
   static const String loginMsg = 'Login Successful!';
+  static const String registerMsg = 'Register Successful!';
   static const String individual = 'Individual';
   static const String company = 'Company';
   static const String warehouse = 'Warehouse';
@@ -111,15 +116,16 @@ class AppStringsConstants {
   static const String diameter = 'Diameter';
   static const String thickness = 'Thickness';
   static const String bore = 'Bore';
-  static const String searchProduct = 'Search for product, categories....  ';
+  static const String searchProduct = 'Search for product';
   static const String addToCart = 'Add to cart';
   static const String buyNow = 'Buy Now';
   static const String productDetails = 'Product Details';
   static const String moveToCart = 'Move to cart';
   static const String clear = 'Clear';
+  static const String filter = 'Filter';
   static const String myCart = 'My Cart';
-  static const String cartEmpty  = 'Your cart is empty';
-  static const String total  = 'Total';
+  static const String cartEmpty = 'Your cart is empty';
+  static const String total = 'Total';
   static const String vat = 'VAT(5%)';
   static const String subtotal = 'Subtotal';
   static const String requestToQuote = 'Request to Quote';
@@ -144,14 +150,14 @@ class AppStringsConstants {
   static const String logout = 'Logout';
   static const String gallery = 'Gallery';
   static const String camera = 'Camera';
-  static const String removeAllProductMsg = 'Are you sure you want to remove all products from your wishlist?';
+  static const String removeAllProductMsg =
+      'Are you sure you want to remove all products from your wishlist?';
   static const String productCartMsg = 'Product added to cart';
   static const String all = 'All';
   static const String stock = 'Stock';
   static const String colon = ':';
   static const String goToCart = 'Go to Cart';
-  static const String noProductData = 'No Product Data';
-  static const String registerMsg =  'Registration successful.';
+  static const String noProductData = 'No product loaded';
   static const String selectCountry = 'Select country';
   static const String selectCountryMsg = 'Please select country';
   static const String selectState = 'Select state';
@@ -182,6 +188,7 @@ class AppStringsConstants {
   static const String selectCompanyMsg = 'Please select company';
   static const String contactPerson = 'Contact Person';
   static const String vatName = 'VAT / TRN';
+  static const String searchWishlist = 'Search wishlist';
   static const String selectPaymentTerms = 'Select Payment Terms';
   static const String selectPaymentTermsMsg = 'Please select Payment Terms';
   static const String creditLimit = 'Credit Limit';
@@ -202,8 +209,61 @@ class AppStringsConstants {
   static const String attachmentAddMsg = 'No attachments added';
   static const String attachment = 'Attachment';
   static const String searchCustomer = 'Search Customer';
-  static const String noCustomerData = 'No Customer Data';
+  static const String noCustomerData = 'No customer loaded';
+  static const String customerDetail = 'Customer Detail';
+  static const String orderSummary = 'Order Summary';
+  static const String invoiceDetail = 'Invoice Detail';
+  static const String orders = 'Orders';
+  static const String searchOrder = 'Search Order';
+  static const String noOrderData = 'No order loaded';
+  static const String deliveryDetail = 'Delivery Detail';
+  static const String deliveryName = 'Delivery Name';
+  static const String deliveryAddress = 'Delivery Address';
+  static const String filterByStatus = 'Filter by Status';
+  static const String untaxedAmount = 'Untaxed Amount';
+  static const String paymentMethod = 'Payment Method';
+  static const String quotations = 'Quotations';
+  static const String salesOrder = 'Sales Order';
+  static const String customerStatement = 'Customer Statement';
+  static const String deliveryHistory = 'Delivery History';
+  static const String invoices = 'Invoices';
+  static const String sendMessage = 'Send Message';
+  static const String logNote = 'Log Note';
+  static const String activities = 'Activities';
+  static const String requestQuoteMsg = 'Request Quote successfully!';
+  static const String location = 'Location';
+  static const String note = 'Note';
+  static const String submitRequest = 'Submit Request';
+  static const String thankYou = 'Thank You!';
+  static const String goToHome = 'Go to Home';
+  static const String thankYouMsg =
+      'Your message has been sent.\nWe will get back to you shortly.';
+  static const String selectedLocation = 'Select Location';
+  static const String noLocationFound = 'No location found';
+  static const String useCurrentLocation = 'Use current location';
+  static const String delectYourCurrentLocation =
+      'Detect your current location';
+  static const String searchLocation = 'Search city, area or pinCode';
 
+  ///Order Items
+  static const String orderItems = 'Order Items';
+  static const String product = 'Product';
+  static const String price = 'Price';
+  static const String qty = 'Qty';
+  static const String demand = 'Demand';
+  static const String unit = 'Unit';
+  static const String discount = 'Discount';
+
+  ///Order Status
+  static const String quotation = "Quotation";
+  static const String quotationSent = "Quotation Sent";
+  static const String saleOrder = "Sale Order";
+  static const String cancelled = "Cancelled";
+
+  static const String draftL = "draft";
+  static const String sentL = "sent";
+  static const String saleL = "sale";
+  static const String cancelL = "cancel";
 
   //Theme
   static const String chooseTheme = 'Choose Theme';

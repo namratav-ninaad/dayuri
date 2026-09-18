@@ -84,7 +84,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<List<StateModel>> fetchStates({required int countryId}) async {
     try {
-      final res = await dio.get(AppStringsConstants.stateURl);
+      final res = await dio.get(
+        AppStringsConstants.stateURl,
+        queryParameters: {'country_id': countryId},
+      );
 
       return CommonResponse<List<StateModel>>.fromJson(res.data, (json) {
         if (json is Map<String, dynamic> && json['states'] != null) {
@@ -98,7 +101,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(getErrorMessage(e));
     }
   }
-
 
   @override
   Future<String> register({required RegisterData data}) async {

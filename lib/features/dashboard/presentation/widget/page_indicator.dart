@@ -6,7 +6,7 @@ class PageIndicator extends StatelessWidget {
   final int itemCount;
   final int selectIndex;
 
-  const PageIndicator({super.key, this.itemCount = 4, required this.selectIndex});
+  const PageIndicator({super.key, this.itemCount = 3, required this.selectIndex});
 
   @override
   Widget build(BuildContext context) {

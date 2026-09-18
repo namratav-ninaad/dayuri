@@ -1,3 +1,4 @@
+import 'package:dayuri/core/constants/app_colors.dart';
 import 'package:dayuri/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +52,47 @@ enum NoteType {
       case NoteType.followup:
         return Icons.calendar_today_outlined;
     }
+  }
+}
+
+
+enum OrderStatus {
+  draft,
+  sent,
+  sale,
+  cancel;
+
+  String get label => switch (this) {
+    OrderStatus.draft => AppStringsConstants.quotation,
+    OrderStatus.sent => AppStringsConstants.quotationSent,
+    OrderStatus.sale => AppStringsConstants.saleOrder,
+    OrderStatus.cancel => AppStringsConstants.cancelled,
+  };
+
+  Color get color => switch (this) {
+    OrderStatus.draft => AppColorsConstants.grey89,
+    OrderStatus.sent => AppColorsConstants.blue,
+    OrderStatus.sale => AppColorsConstants.green,
+    OrderStatus.cancel => AppColorsConstants.red,
+  };
+
+  String get apiValue => switch (this) {
+    OrderStatus.draft => AppStringsConstants.draftL,
+    OrderStatus.sent => AppStringsConstants.sentL,
+    OrderStatus.sale => AppStringsConstants.saleL,
+    OrderStatus.cancel => AppStringsConstants.cancelL,
+  };
+
+  static OrderStatus? fromString(String value) {
+    final status = value.toLowerCase().trim();
+
+    return switch (status) {
+      AppStringsConstants.draftL => OrderStatus.draft,
+      AppStringsConstants.sentL => OrderStatus.sent,
+      AppStringsConstants.saleL => OrderStatus.sale,
+      AppStringsConstants.cancelL => OrderStatus.cancel,
+      _ => null,
+    };
   }
 }
 

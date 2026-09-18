@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dayuri/core/constants/app_strings.dart';
 import 'package:dayuri/core/routes/app_routes.dart';
 import 'package:dayuri/core/routes/routes_name.dart';
 import 'package:dayuri/core/share_preference/share_pref_helper.dart';
+import 'package:dayuri/features/auth/data/model/login_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +18,7 @@ class DioClient {
         baseUrl: AppStringsConstants.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       ),
     );
 
@@ -49,21 +48,22 @@ class SessionInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final result = await Connectivity().checkConnectivity();
+    final loginJson = await SharedPrefHelper.getString(
+      AppStringsConstants.loginResponse,
+    );
     final sessionId = await SharedPrefHelper.getString(
       AppStringsConstants.sessionId,
     );
+    if (loginJson != null && loginJson.isNotEmpty) {
+      final loginData = LoginModel.fromJson(jsonDecode(loginJson));
 
-    final token = await SharedPrefHelper.getString(
-      AppStringsConstants.accessToken,
-    );
-
-    if (sessionId != null && sessionId.isNotEmpty) {
-      options.headers['Cookie'] = sessionId;
+      if (sessionId != null && sessionId.isNotEmpty) {
+        options.headers['Cookie'] = sessionId;
+      }
+      if (loginData.accessToken.isNotEmpty) {
+        options.headers['api-key'] = loginData.accessToken;
+      }
     }
-    if (token != null && token.isNotEmpty) {
-      options.headers['api-key'] = token;
-    }
-
     if (result.contains(ConnectivityResult.none)) {
       return handler.reject(
         DioException(
@@ -105,12 +105,11 @@ class SessionInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      await SharedPrefHelper.clearAll();
-
+      await SharedPrefHelper.remove(AppStringsConstants.loginResponse);
+      await SharedPrefHelper.remove(AppStringsConstants.sessionId);
       // Navigate to Login Screen if needed
       AppRoutes.pushReplacementNamed(RouteNames.login);
     }
-
-    handler.next(err);
+    // handler.next(err);
   }
 }

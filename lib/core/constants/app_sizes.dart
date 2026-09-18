@@ -17,10 +17,12 @@ class AppSizes {
 
   //Height Sizes
   static const double s0 = 0.0;
+  static const double s1 = 1.0;
   static const double s2 = 2.0;
   static const double s4 = 4.0;
   static const double s6 = 6.0;
   static const double s8 = 8.0;
+  static const double s10 = 10.0;
   static const double s12 = 12.0;
   static const double s14 = 14.0;
   static const double s16 = 16.0;
@@ -53,6 +55,7 @@ class AppSizes {
   static const double p60 = 60.0;
 
   // Radius
+  static const double r0 = 0.0;
   static const double r4 = 4.0;
   static const double r5 = 5.0;
   static const double r8 = 8.0;
@@ -60,6 +63,7 @@ class AppSizes {
   static const double r16 = 16.0;
   static const double r20 = 20.0;
   static const double r24 = 24.0;
+  static const double r50 = 50.0;
 
   // Icon Sizes
   static const double icon10 = 10.0;
@@ -92,6 +96,7 @@ class AppSizes {
   static const double image120 = 120.0;
   static const double image150 = 150.0;
   static const double image180 = 180.0;
+  static const double image280 = 280.0;
 
   //Common Spacing Widgets
   static const SizedBox h0 = SizedBox();

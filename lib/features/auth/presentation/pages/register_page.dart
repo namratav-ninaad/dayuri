@@ -5,6 +5,7 @@ import 'package:dayuri/core/enum/app_enum.dart';
 import 'package:dayuri/core/routes/app_routes.dart';
 import 'package:dayuri/core/routes/routes_name.dart';
 import 'package:dayuri/core/theme/theme_color_extension.dart';
+import 'package:dayuri/core/toast/toast_helper.dart';
 import 'package:dayuri/core/widgets/common_button.dart';
 import 'package:dayuri/core/widgets/common_drop_down.dart';
 import 'package:dayuri/core/widgets/common_icon_widget.dart';
@@ -12,7 +13,6 @@ import 'package:dayuri/core/widgets/common_logo_image.dart';
 import 'package:dayuri/core/widgets/common_text_field.dart';
 import 'package:dayuri/core/widgets/common_text_widget.dart';
 import 'package:dayuri/features/auth/data/model/country.dart';
-import 'package:dayuri/features/auth/data/model/state.dart';
 import 'package:dayuri/features/auth/domain/entities/register_data.dart';
 import 'package:dayuri/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:dayuri/features/auth/presentation/bloc/register/register_state.dart';
@@ -39,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final cityController = TextEditingController();
   final zipController = TextEditingController();
   final streetController = TextEditingController();
+  final street2Controller = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -67,7 +68,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: context.white,
       body: BlocConsumer<RegisterBloc, RegisterState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.status.isSuccess && state.successMessage != null) {
+            ToastHelper.success(state.successMessage!);
+            AppRoutes.pushReplacementNamed(RouteNames.login);
+          }
+          if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+            ToastHelper.error(state.errorMessage!);
+          }
+        },
         builder: (context, state) {
           return Center(
             child: SingleChildScrollView(
@@ -167,22 +176,57 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: (value) => AppValidators.phone(value),
                         ),
                         AppSizes.h12,
-                        // County and State Field
+                        // Street 1 Field
+                        CommonTextFormField(
+                          controller: streetController,
+                          labelText: AppStringsConstants.street,
+                          keyboardType: TextInputType.streetAddress,
+                          prefixIcon: Icons.location_on_outlined,
+                          validator: (value) => AppValidators.requiredField(
+                            value,
+                            AppStringsConstants.street,
+                          ),
+                        ),
+                        AppSizes.h12,
+                        // Street 2  Field
+                        CommonTextFormField(
+                          controller: street2Controller,
+                          labelText: AppStringsConstants.street2,
+                          keyboardType: TextInputType.streetAddress,
+                          prefixIcon: Icons.location_on_outlined,
+                          validator: (value) => AppValidators.requiredField(
+                            value,
+                            AppStringsConstants.street2,
+                          ),
+                        ),
+                        AppSizes.h12,
+                        // County and Zip Field
                         Row(
                           children: [
                             Expanded(
                               child: CommonDropdown<CountryModel>(
-                                fillColor: context.white,
-                                enabled: state.countries.isEmpty ? false : true,
+                                fillColor: context.greyF2,
+                                enabled: false,
                                 hintText: AppStringsConstants.selectCountry,
-                                initialValue: state.selectedCountry,
-                                items: state.countries,
+
+                                initialValue: state.countries.isEmpty
+                                    ? state.selectedCountry
+                                    : state.countries
+                                          .where((country) => country.id == 197)
+                                          .isNotEmpty
+                                    ? state.countries.firstWhere(
+                                        (country) => country.id == 197,
+                                      )
+                                    : state.selectedCountry,
+
+                                items: state.countries
+                                    .where((country) => country.id == 197)
+                                    .toList(),
+
                                 itemLabel: (country) => country.name,
-                                onChanged: (country) {
-                                  if (country != null) {
-                                    bloc.add(SelectCountryEvent(country));
-                                  }
-                                },
+
+                                onChanged: null,
+
                                 validator: (value) {
                                   if (value == null) {
                                     return AppStringsConstants.selectCountryMsg;
@@ -192,6 +236,22 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             AppSizes.w12,
+                            // Zip Field
+                            Expanded(
+                              child: CommonTextFormField(
+                                controller: zipController,
+                                labelText: AppStringsConstants.zip,
+                                keyboardType: TextInputType.number,
+                                prefixIcon: Icons.markunread_mailbox_outlined,
+                                validator: (value) =>
+                                    AppValidators.requiredField(
+                                      value,
+                                      AppStringsConstants.zip,
+                                    ),
+                              ),
+                            ),
+
+                            /* AppSizes.w12,
                             Expanded(
                               child: CommonDropdown<StateModel>(
                                 fillColor: context.white,
@@ -218,13 +278,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   return null;
                                 },
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                         AppSizes.h12,
-                        Row(
+                        /*  Row(
                           children: [
-                            // City Field
+                          // City Field
                             Expanded(
                               child: CommonTextFormField(
                                 controller: cityController,
@@ -255,19 +315,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ],
                         ),
-                        AppSizes.h12,
-                        // Street Field
-                        CommonTextFormField(
-                          controller: streetController,
-                          labelText: AppStringsConstants.street,
-                          keyboardType: TextInputType.streetAddress,
-                          prefixIcon: Icons.location_on_outlined,
-                          validator: (value) => AppValidators.requiredField(
-                            value,
-                            AppStringsConstants.street,
-                          ),
-                        ),
-                        AppSizes.h12,
+                        AppSizes.h12,*/
 
                         // Password Field
                         CommonTextFormField(
@@ -292,7 +340,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           obscureText: state.obscureConfirmPassword,
                           labelText: AppStringsConstants.confirmPassword,
                           prefixIcon: Icons.lock_outline,
-                          validator: AppValidators.password,
+                          validator: (value) => AppValidators.confirmPassword(
+                            value,
+                            passwordController.text,
+                          ),
                           suffixIcon: CommonIconWidget(
                             onTap: () =>
                                 bloc.add(ToggleConfirmPasswordVisibility()),
@@ -324,11 +375,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     password: passwordController.text.trim(),
                                     countryId:
                                         state.selectedCountry?.id.toInt() ?? 0,
-                                    stateId:
-                                        state.selectedState?.id.toInt() ?? 0,
-                                    city: cityController.text.trim(),
                                     zip: zipController.text.trim(),
                                     street: streetController.text.trim(),
+                                    street2: street2Controller.text.trim(),
                                     companyId: 1,
                                     contactType: state.isIndividual
                                         ? AppStringsConstants.individual

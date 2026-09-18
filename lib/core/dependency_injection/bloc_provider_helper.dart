@@ -4,9 +4,15 @@ import 'package:dayuri/features/auth/presentation/bloc/otp/otp_bloc.dart';
 import 'package:dayuri/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:dayuri/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
 import 'package:dayuri/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:dayuri/features/customer/presentation/bloc/create_customer_bloc/create_customer_bloc.dart';
+import 'package:dayuri/features/customer/presentation/bloc/customer/customer_bloc.dart';
 import 'package:dayuri/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:dayuri/features/home/presentation/bloc/home_bloc.dart';
+import 'package:dayuri/features/order/presentation/bloc/order_bloc.dart';
+import 'package:dayuri/features/product/presentation/bloc/filter_bloc.dart';
+import 'package:dayuri/features/product/presentation/bloc/product_bloc.dart';
 import 'package:dayuri/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:dayuri/features/quote/presentation/bloc/quote_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection.dart';
 
@@ -27,5 +33,11 @@ List<BlocProvider> authBlocProviders() {
     blocProvider<DashboardBloc>(),
     blocProvider<CartBloc>(),
     blocProvider<ProfileBloc>(),
+    blocProvider<CustomerBloc>(),
+    blocProvider<OrderBloc>(),
+    blocProvider<CreateCustomerBloc>(),
+    blocProvider<ProductBloc>(),
+    blocProvider<FilterBloc>(),
+    blocProvider<QuoteBloc>(),
   ];
 }

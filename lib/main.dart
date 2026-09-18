@@ -11,7 +11,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
+  try {
+    debugPrint('Configuring dependencies...');
+    await configureDependencies();
+    debugPrint('Dependencies configured successfully');
+  } catch (e, stackTrace) {
+    debugPrint('❌ DEPENDENCY ERROR: $e');
+    debugPrint('$stackTrace');
+  }
   runApp(const MyApp());
 }
 
@@ -30,7 +37,7 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: generateRoute,
             title: AppStringsConstants.appName,
             debugShowCheckedModeBanner: false,
-             themeMode: state.themeMode,
+            themeMode: state.themeMode,
             theme: ThemeData(
               brightness: Brightness.light,
               useMaterial3: false,

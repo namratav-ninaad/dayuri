@@ -10,6 +10,7 @@ class ProductFilterData {
       'product_type': 'goods',
       'out_of_stock': false,
       'is_published': true,
+      'company_id': 2,
       if (categoryId != null) "category_id": categoryId,
     };
   }

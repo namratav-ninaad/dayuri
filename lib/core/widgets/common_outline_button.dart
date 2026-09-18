@@ -51,41 +51,41 @@ class CommonOutlineButton extends StatelessWidget {
         height: height ?? AppSizes.s45,
         padding: padding,
         decoration: BoxDecoration(
-          // border: Border.all(color: borderColor ?? context.greyC8),
-          color: context.greyC8.withValues(alpha: 0.4),
+          border: Border.all(color: borderColor ?? context.greyC8),
+          // color: context.greyC8.withValues(alpha: 0.4),
           borderRadius: BorderRadius.circular(borderRadius ?? AppSizes.r12),
         ),
         alignment: Alignment.center,
         child: isLoading
             ? SizedBox(
-          width: circularSize ?? AppSizes.s20,
-          height: circularSize ?? AppSizes.s20,
-          child: CommonCircularProgressIndicator(
-            strokeWidth: strokeWidth,
-          ),
-        )
+                width: circularSize ?? AppSizes.s20,
+                height: circularSize ?? AppSizes.s20,
+                child: CommonCircularProgressIndicator(
+                  strokeWidth: strokeWidth,
+                ),
+              )
             : Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (imagePath != null) ...[
-              CommonAssetsImageWidget(
-                imagePath: imagePath!,
-                imageHeight: imageHeight ?? AppSizes.icon20,
-                imageWidth: imageWidth ?? AppSizes.icon20,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (imagePath != null) ...[
+                    CommonAssetsImageWidget(
+                      imagePath: imagePath!,
+                      imageHeight: imageHeight ?? AppSizes.icon20,
+                      imageWidth: imageWidth ?? AppSizes.icon20,
+                    ),
+                    sizedBoxWidth ?? AppSizes.w12,
+                  ],
+                  CommonTextWidget(
+                    title: title,
+                    textAlign: TextAlign.center,
+                    overFlow: TextOverflow.ellipsis,
+                    color: textColor ?? context.black,
+                    fontSize: fontSize ?? AppSizes.f16,
+                    fontWeight: fontWeight ?? FontWeight.w400,
+                  ),
+                ],
               ),
-              sizedBoxWidth ?? AppSizes.w12,
-            ],
-            CommonTextWidget(
-              title: title,
-              textAlign: TextAlign.center,
-              overFlow: TextOverflow.ellipsis,
-              color: textColor ?? context.black,
-              fontSize: fontSize ?? AppSizes.f16,
-              fontWeight: fontWeight ?? FontWeight.w400,
-            ),
-          ],
-        ),
       ),
     );
   }

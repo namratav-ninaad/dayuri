@@ -3,15 +3,14 @@ import 'package:dayuri/core/constants/app_sizes.dart';
 import 'package:dayuri/core/constants/app_strings.dart';
 import 'package:dayuri/core/theme/theme_color_extension.dart';
 import 'package:dayuri/core/widgets/common_assets_image_widget.dart';
-import 'package:dayuri/core/widgets/common_text_widget.dart';
-import 'package:dayuri/features/cart/presentation/page/cart_page.dart';
-import 'package:dayuri/features/customer/presentation/page/customer_page.dart';
 import 'package:dayuri/features/dashboard/presentation/page/dashboard_page.dart';
 import 'package:dayuri/features/home/presentation/bloc/home_bloc.dart';
 import 'package:dayuri/features/home/presentation/bloc/home_event.dart';
 import 'package:dayuri/features/home/presentation/bloc/home_state.dart';
+import 'package:dayuri/features/order/domain/entities/order_data.dart';
+import 'package:dayuri/features/order/presentation/page/order_page.dart';
+import 'package:dayuri/features/product/presentation/page/product_page.dart';
 import 'package:dayuri/features/profile/presentation/page/profile_page.dart';
-import 'package:dayuri/features/wishlist/presentation/page/wishlist_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,13 +26,15 @@ class _HomePageState extends State<HomePage> {
     switch (index) {
       case 0:
         return DashboardPage();
+      /*case 1:
+        return WishlistPage();*/
       case 1:
-        return WishlistPage();
+        return ProductPage();
+    /*  case 2:
+        return CustomerPage();*/
       case 2:
-        return CustomerPage();
+        return OrderPage(data: OrderData());
       case 3:
-        return Center(child: CommonTextWidget(title: 'Order'));
-      case 4:
         return ProfilePage();
       default:
         return DashboardPage();
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 label: AppStringsConstants.dashboard,
               ),
-              BottomNavigationBarItem(
+            /*  BottomNavigationBarItem(
                 icon: CommonAssetsImageWidget(
                   imagePath: AppImagesConstants.wishlistIcon,
                   imageHeight: AppSizes.icon20,
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       : context.greyA3,
                 ),
                 label: AppStringsConstants.wishlist,
-              ),
+              ),*/
               /*  BottomNavigationBarItem(
                 icon: CommonAssetsImageWidget(
                   imagePath: AppImagesConstants.cartIcon,
@@ -117,21 +118,21 @@ class _HomePageState extends State<HomePage> {
               ),*/
               BottomNavigationBarItem(
                 icon: CommonAssetsImageWidget(
-                  imagePath: AppImagesConstants.customersIcon,
+                  imagePath: AppImagesConstants.productIcon,
                   imageHeight: AppSizes.icon20,
                   imageWidth: AppSizes.icon20,
-                  color: state.selectedIndex == 2
+                  color: state.selectedIndex == 1
                       ? context.primaryBlueColor
                       : context.greyA3,
                 ),
-                label: AppStringsConstants.customer,
+                label: AppStringsConstants.product,
               ),
               BottomNavigationBarItem(
                 icon: CommonAssetsImageWidget(
                   imagePath: AppImagesConstants.orderIcon,
                   imageHeight: AppSizes.icon20,
                   imageWidth: AppSizes.icon20,
-                  color: state.selectedIndex == 3
+                  color: state.selectedIndex == 2
                       ? context.primaryBlueColor
                       : context.greyA3,
                 ),
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                   imagePath: AppImagesConstants.profileIcon,
                   imageHeight: AppSizes.icon20,
                   imageWidth: AppSizes.icon20,
-                  color: state.selectedIndex == 4
+                  color: state.selectedIndex == 3
                       ? context.primaryBlueColor
                       : context.greyA3,
                 ),

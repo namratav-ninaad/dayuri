@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dayuri/core/error/failures.dart';
-import 'package:dayuri/features/dashboard/data/model/category.dart';
-import 'package:dayuri/features/dashboard/data/repository/dashboard_repository.dart';
+import 'package:dayuri/features/product/data/model/category.dart';
+import 'package:dayuri/features/product/data/repository/product_repository.dart';
 
 class CategoryUseCase {
-  final DashboardRepository repository;
+  final ProductRepository repository;
 
   CategoryUseCase(this.repository);
 
